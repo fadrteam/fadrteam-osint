@@ -1141,14 +1141,15 @@ if (emailBtn) {
 }
 
 // ==========================================
-// 26. ПРЕЛОАДЕР (МАТРИЧНЫЙ СКАНЕР)
+// 26. ПРЕЛОАДЕР (СЧЕТЧИК ДО 100%)
 // ==========================================
 window.addEventListener('load', () => {
     const preloader = document.getElementById('preloader');
     const logBox = document.getElementById('loader-log');
-    const fillBar = document.querySelector('.scanner-fill'); // Новый класс полоски
+    const percentBox = document.getElementById('loader-percent');
+    const fillBar = document.querySelector('.scanner-fill'); 
     
-    if (preloader && logBox && fillBar) {
+    if (preloader && logBox && fillBar && percentBox) {
         const logs = [
             "[SYSTEM] BOOTING...",
             "[OK] LOADING MODULES...",
@@ -1159,39 +1160,61 @@ window.addEventListener('load', () => {
         
         let currentLine = 0;
         let currentChar = 0;
+        let currentPercent = 0;
         
+        // 1. Анимация процентов (долетает до 100%)
+        const percentInterval = setInterval(() => {
+            if (currentPercent < 100) {
+                // Прибавляем случайно от 2 до 6, чтобы было похоже на реальную загрузку
+                currentPercent += Math.floor(Math.random() * 2) + 2; 
+                if (currentPercent > 100) currentPercent = 100;
+                
+                percentBox.textContent = currentPercent + '%';
+                fillBar.style.width = currentPercent + '%';
+            } else {
+                clearInterval(percentInterval);
+            }
+        }, 80); 
+
+        // 2. Печать текста в терминале
         function typeLog() {
             if (currentLine < logs.length) {
                 if (currentChar < logs[currentLine].length) {
                     logBox.innerHTML += logs[currentLine][currentChar];
                     currentChar++;
-                    setTimeout(typeLog, 20);
+                    setTimeout(typeLog, 20); // Скорость печати текста
                 } else {
                     logBox.innerHTML += "<br>";
                     currentLine++;
                     currentChar = 0;
-                    
-                    // Обновляем неоновую полоску
-                    let progress = (currentLine / logs.length) * 100;
-                    fillBar.style.width = progress + '%';
-                    
-                    setTimeout(typeLog, 150);
+                    setTimeout(typeLog, 150); // Пауза между строками
                 }
             } else {
-                // Плавное исчезновение
-                setTimeout(() => {
-                    preloader.classList.add('hidden');
-                    // Через 0.6 сек (время CSS-перехода) полностью убираем из DOM
-                    setTimeout(() => {
-                        preloader.style.display = 'none';
-                    }, 600);
-                }, 800); // Пауза перед исчезновением, чтобы прочитать "ACCESS GRANTED"
+                // Когда текст закончился
+                checkFinish();
             }
         }
         
-        setTimeout(typeLog, 200);
+        // 3. Проверка, что и текст, и проценты закончились
+        function checkFinish() {
+            // Если проценты все еще грузятся, ждем
+            if (currentPercent < 100) {
+                setTimeout(checkFinish, 100);
+                return;
+            }
+            
+            // Если проценты и текст готовы — даем паузу 800мс (чтобы прочитать "ACCESS GRANTED")
+            // и запускаем исчезновение
+            setTimeout(() => {
+                preloader.classList.add('explode'); 
+                setTimeout(() => {
+                    preloader.style.display = 'none';
+                }, 800); // Время анимации разлета (совпадает с CSS)
+            }, 800); 
+        }
+        
+        setTimeout(typeLog, 200); // Задержка перед стартом печати
     } else {
-        // Если что-то не нашли — принудительно скрываем прелоадер, чтобы не зависало
         if(preloader) preloader.style.display = 'none';
     }
 });
@@ -1761,3 +1784,24 @@ document.addEventListener('click', (e) => {
         setTimeout(() => snowflake.remove(), 1000);
     }
 });
+// ==========================================
+// 42. ПЛАВНЫЙ СКРОЛЛ (LENIS)
+// ==========================================
+if (window.innerWidth > 768) { // Отключаем на мобилках, чтобы не лагало
+    const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: 'vertical',
+        gestureDirection: 'vertical',
+        smooth: true,
+        mouseMultiplier: 1,
+        smoothTouch: false,
+        touchMultiplier: 2,
+    });
+
+    function raf(time) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+}

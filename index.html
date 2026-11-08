@@ -19,6 +19,7 @@
     </video>
     
     <div class="scanner-box">
+        
         <!-- Обертка для колец и логотипа -->
         <div class="scanner-visual">
             <div class="ring ring-1"></div>
@@ -31,6 +32,9 @@
         
         <!-- Неоновая полоска -->
         <div class="scanner-bar"><div class="scanner-fill"></div></div>
+         <!-- Счетчик -->
+        <div id="loader-percent" style="font-size: 2.5rem; font-weight: bold; color: var(--accent-color); margin-top: 15px; font-family: 'JetBrains Mono', monospace; text-shadow: 0 0 20px var(--accent-color);">0%</div>
+    </div>
     </div>
 </div>
 
@@ -543,5 +547,6 @@
             <div class="hack-body" id="hack-log"></div>
         </div>
     </div>
+    <script src="https://unpkg.com/@studio-freight/lenis@1.0.33/dist/lenis.min.js"></script>
 </body>
 </html>
