@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fadr | OSINT & Tech</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <button id="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+    <div id="mobile-overlay"></div>
+    
+    <!-- Прелоадер -->
+<div id="preloader">
+    <video autoplay muted loop playsinline webkit-playsinline x5-playsinline id="loader-bg-video">
+        <source src="loader-video.mp4" type="video/mp4">
+    </video>
+    
+    <div class="scanner-box">
+        <!-- Обертка для колец и логотипа -->
+        <div class="scanner-visual">
+            <div class="ring ring-1"></div>
+            <div class="ring ring-2"></div>
+            <img src="avatar.jpg" alt="FADR Logo" class="loader-logo">
+        </div>
+        
+        <!-- Терминальный текст -->
+        <div class="terminal-load-text" id="loader-log"></div>
+        
+        <!-- Неоновая полоска -->
+        <div class="scanner-bar"><div class="scanner-fill"></div></div>
+    </div>
+</div>
+
+    <!-- Боковая панель -->
+    <div class="sidebar">
+        <div class="sidebar-logo">FADR<span>.TEAM</span></div>
+        <ul class="sidebar-menu">
+            <li onclick="openTab('tab-home')"><i class="fa-solid fa-terminal" style="margin-right:8px; color:var(--accent-color);"></i> Главная</li>
+            <li onclick="openTab('tab-osint')"><i class="fa-solid fa-user-secret" style="margin-right:8px; color:var(--accent-color);"></i> OSINT</li>
+            <li onclick="openTab('tab-tools')"><i class="fa-solid fa-screwdriver-wrench" style="margin-right:8px; color:var(--accent-color);"></i> Инструменты</li>
+            <li onclick="openTab('tab-about-page')"><i class="fa-solid fa-id-badge" style="margin-right:8px; color:var(--accent-color);"></i> Обо мне</li>
+        </ul>
+        <div class="sidebar-themes">
+            <p>Цвет акцента:</p>
+            <div class="color-btns">
+                <button onclick="changeAccent('#4ade80')" style="background: #4ade80;"></button>
+                <button onclick="changeAccent('#3b82f6')" style="background: #3b82f6;"></button>
+                <button onclick="changeAccent('#a855f7')" style="background: #a855f7;"></button>
+                <button onclick="changeAccent('#ff5f56')" style="background: #ff5f56;"></button>
+            </div>
+        </div>
+    </div> 
+
+
+    <div class="main-content">
+        <!-- ГЛАВНАЯ -->
+        <div id="tab-home" class="tab-page active">
+            <header id="top">
+                <img src="avatar.jpg" alt="Моя аватарка" class="avatar">
+                <h1>Привет, я Fadr</h1>
+                <p>Изучаю OSINT, железо и веб.</p>
+            </header>
+            
+
+            <audio id="bg-music" preload="metadata"></audio>         
+            <div class="music-player">
+                <div class="player-bg-glow" id="player-bg-glow"></div>
+                
+                <div class="player-cover">
+                   <img src="covers/cover1.jpg" alt="Обложка" id="player-cover-img">
+                </div>
+                <div class="player-info">
+                    <h3 id="track-title">Название трека</h3>
+                    <p id="track-artist">Исполнитель</p>
+                    
+                    <div class="progress-wrapper">
+                        <span id="current-time">0:00</span>
+                        <div class="progress-container" id="progress-container">
+                            <div class="progress-bar" id="progress-bar">
+                                <div class="progress-thumb"></div>
+                            </div>
+                        </div>
+                        <span id="total-time">0:00</span>
+                    </div>
+                    <div class="player-controls">
+                        <button id="repeat-btn" class="ctrl-btn" title="Повтор"><i class="fa-solid fa-repeat"></i></button>
+                        <button id="prev-btn" class="ctrl-btn"><i class="fa-solid fa-backward-step"></i></button>
+                        <button id="play-pause-btn" class="ctrl-btn play-btn"><i class="fa-solid fa-play"></i></button>
+                        <button id="next-btn" class="ctrl-btn"><i class="fa-solid fa-forward-step"></i></button>
+                        <input type="range" id="volume-slider" min="0" max="1" step="0.05" value="0.1" title="Громкость">
+                    </div>      
+                </div>
+                <div class="visualizer-container">
+                    <canvas id="visualizer"></canvas>
+                </div>
+            </div>
+
+            <div class="ticker-wrap">
+                <div class="ticker">
+                    <div class="ticker__item">[SYSTEM] OSINT MODULE LOADED...</div>
+                    <div class="ticker__item">[SYSTEM] VPN CONNECTION SECURED...</div>
+                    <div class="ticker__item">[WARNING] UNAUTHORIZED ACCESS DETECTED...</div>
+                    <div class="ticker__item">[SYSTEM] DATA ENCRYPTION ACTIVE...</div>
+                    <div class="ticker__item">[INFO] SERVER STATUS: ONLINE...</div>
+                     <!-- Дубликат для бесконечности -->
+        <div class="ticker__item">[SYSTEM] OSINT MODULE LOADED...</div>
+        <div class="ticker__item">[SYSTEM] VPN CONNECTION SECURED...</div>
+        <div class="ticker__item">[WARNING] UNAUTHORIZED ACCESS DETECTED...</div>
+        <div class="ticker__item">[SYSTEM] DATA ENCRYPTION ACTIVE...</div>
+        <div class="ticker__item">[INFO] SERVER STATUS: ONLINE...</div>
+                </div>
+            </div>
+
+            <section class="active">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fa-regular fa-clock" style="margin-right:8px; color:var(--accent-color);"></i> Время и Статус</h2>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="section-body">
+                    <div class="dashboard">
+                        <div class="clock-box">
+                            <h2 id="clock">00:00:00</h2>
+                            <p id="date">Загрузка даты...</p>
+                        </div>
+                        <div class="status-box">
+                            <p>Статус сервера: <span style="color: var(--accent-color, #4ade80);"><i class="fa-solid fa-circle-check"></i> ONLINE</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="active">
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fa-solid fa-list-check" style="margin-right:8px; color:var(--accent-color);"></i> Мой Roadmap</h2>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="section-body">
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-dot" style="background: #4ade80;"></div>
+                            <div class="timeline-date">Октябрь 2026</div>
+                            <div class="timeline-content">
+                                <div class="timeline-header" onclick="toggleTimeline(this)">
+                                    <h3>Сборка OSINT-комбайна</h3>
+                                    <span class="toggle-icon">+</span>
+                                </div>
+                                <div class="timeline-details">
+                                    <p>Разработка локального инструмента для автоматизации поиска по никам и базам.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot" style="background: #3b82f6;"></div>
+                            <div class="timeline-date">Ноябрь 2026</div>
+                            <div class="timeline-content">
+                                <div class="timeline-header" onclick="toggleTimeline(this)">
+                                    <h3>Запуск домашнего сервера</h3>
+                                    <span class="toggle-icon">+</span>
+                                </div>
+                                <div class="timeline-details">
+                                    <p>Настройка Xeon для размещения виртуалок с Kali Linux.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-item">
+                            <div class="timeline-dot" style="background: #a855f7;"></div>
+                            <div class="timeline-date">Декабрь 2026</div>
+                            <div class="timeline-content">
+                                <div class="timeline-header" onclick="toggleTimeline(this)">
+                                    <h3>Дальнейшая разработка веб-сайта</h3>
+                                    <span class="toggle-icon">+</span>
+                                </div>
+                                <div class="timeline-details">
+                                    <p>Обновления и многое другое.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="nav-menu">
+                <button class="nav-btn active" data-target="home-tab-about">Обо мне</button>
+                <button class="nav-btn" data-target="home-tab-projects">Проекты</button>
+                <button class="nav-btn" data-target="home-tab-contact">Контакты</button>
+            </div>
+
+            <section id="home-tab-about" class="tab-content active">
+                <h2>Обо мне</h2>
+                <p>Привет! Я Fadr. Увлекаюсь OSINT, железом и веб-разработкой.</p>
+            </section>
+
+            <section id="home-tab-projects" class="tab-content">
+                <h2>Мои проекты</h2>
+                <div class="project-item">
+                    <h3>OSINT-кейс №1 (Закрыт)</h3>
+                    <p>Мне в руки попался очень интересный человек, который оказался пиздец какой сложный по поиску. Начал я с поиска в ТГ, но там ничего не нашел. Пошел в ВК и нашел его страницу.</p>
+                    <p>Назавем его "Олег". По началу все было супер: узнал ФИО и дату рождения. Но когда начал копать глубже, оказалось, что у него есть еще одна фамилия, о которой я не знал. Это усложнило круг поиска. Потом появилась еще одна фамилия. Я встрял, было непонятно, кто он на самом деле.</p>
+                    <p>Но к счастью, я справился. Нарыл: дату рождения, номер телефона, адрес, маму с папой, бабушку и дедушку. Закрыл кейс на 8 из 10. А сложность была 10 из 10.</p>
+                </div>
+                <div class="project-item">
+                    <h3>OSINT-кейс №2 (Скоро)</h3>
+                    <p>В процессе разработки...</p>
+                </div>
+                <div class="project-item">
+                    <h3>Настройка сервера (В процессе)</h3>
+                    <p>Сборка и настройка домашнего сервера на базе Xeon для тестов и OSINT-виртуалок.</p>
+                </div>  
+                <div class="project-item">
+                    <h3>Сайт-портфолио (Готово)</h3>
+                    <p>Написал этот сайт с нуля на HTML/CSS/JS.</p>
+                </div>
+            </section>
+
+            <section id="home-tab-contact" class="tab-content">
+                <h2>Контакты</h2>
+                <div class="contact-links">
+                    <a href="https://t.me/fadrteam" target="_blank"><i class="fa-brands fa-telegram"></i> Telegram</a>
+                    <a href="https://github.com/fadrteam" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                    <a href="mailto:твоя_почта@mail.ru"><i class="fa-solid fa-envelope"></i> Email</a>
+                </div>
+            </section>
+        </div>
+
+        <!-- OSINT -->
+        <div id="tab-osint" class="tab-page">
+            <section>
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fa-solid fa-magnifying-glass" style="margin-right:8px; color:var(--accent-color);"></i> Мультипоиск по нику</h2>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="section-body">
+                    <p style="margin-bottom: 10px; color: #888;">Введи ник, выбери площадки, открой выбранные</p>
+                    <div class="input-group">
+                        <input type="text" id="multi-search-input" placeholder="Введи ник (например, durov)">
+                    </div>
+                    <div id="platform-checkboxes" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(140px, 1fr)); gap:8px; margin:12px 0;">
+                        <label class="platform-cb"><input type="checkbox" value="github" checked> GitHub</label>
+                        <label class="platform-cb"><input type="checkbox" value="telegram" checked> Telegram</label>
+                        <label class="platform-cb"><input type="checkbox" value="vk" checked> VK</label>
+                        <label class="platform-cb"><input type="checkbox" value="steam" checked> Steam</label>
+                        <label class="platform-cb"><input type="checkbox" value="tiktok"> TikTok</label>
+                        <label class="platform-cb"><input type="checkbox" value="instagram"> Instagram</label>
+                        <label class="platform-cb"><input type="checkbox" value="reddit"> Reddit</label>
+                        <label class="platform-cb"><input type="checkbox" value="pinterest"> Pinterest</label>
+                        <label class="platform-cb"><input type="checkbox" value="twitch"> Twitch</label>
+                        <label class="platform-cb"><input type="checkbox" value="soundcloud"> SoundCloud</label>
+                        <label class="platform-cb"><input type="checkbox" value="behance"> Behance</label>
+                        <label class="platform-cb"><input type="checkbox" value="keybase"> Keybase</label>
+                        <label class="platform-cb"><input type="checkbox" value="hackernews"> HackerNews</label>
+                        <label class="platform-cb"><input type="checkbox" value="flickr"> Flickr</label>
+                        <label class="platform-cb"><input type="checkbox" value="deviantart"> DeviantArt</label>
+                    </div>
+                    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+                        <button onclick="selectAllPlatforms(true)" style="padding:6px 12px; background:#222; color:#d1d1d1; border:1px solid #444; border-radius:5px; cursor:pointer; font-size:0.85rem;">Все</button>
+                        <button onclick="selectAllPlatforms(false)" style="padding:6px 12px; background:#222; color:#d1d1d1; border:1px solid #444; border-radius:5px; cursor:pointer; font-size:0.85rem;">Ничего</button>
+                        <button id="multi-search-btn" style="padding:10px 20px; background:var(--accent-color,#4ade80); color:#000; border:none; border-radius:5px; cursor:pointer; font-weight:bold; flex-grow:1;">Запустить сканер</button>
+                    </div>
+                    <div id="multi-search-result" style="margin-top:15px; font-family:monospace; font-size:0.9rem;"></div>
+                </div>
+            </section>
+            <!-- Проверка утечек Email -->
+            <section>
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fa-solid fa-envelope-open-text" style="margin-right:8px; color:var(--accent-color);"></i> Проверка утечек Email</h2>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="section-body">
+                    <p style="margin-bottom: 10px; color: #888;">Введи email, чтобы узнать, в каких утечках он засветился</p>
+                    <div class="input-group">
+                        <input type="text" id="email-input" placeholder="example@mail.ru">
+                        <button id="email-check-btn">Проверить</button>
+                    </div>
+                    <div id="email-result" style="margin-top: 15px; font-family: monospace;"></div>
+                </div>
+            </section>
+            <!-- Поиск по номеру телефона -->
+<section>
+    <div class="section-header" onclick="toggleSection(this)">
+        <h2><i class="fa-solid fa-phone" style="margin-right:8px; color:var(--accent-color);"></i> Поиск по номеру</h2>
+        <span class="toggle-arrow">▼</span>
+    </div>
+    <div class="section-body">
+        <p style="margin-bottom: 10px; color: #888;">Введи номер (с кодом страны), чтобы проверить его в базах и мессенджерах.</p>
+        <div class="input-group">
+            <input type="text" id="phone-input" placeholder="+7 999 123-45-67">
+            <button id="phone-btn">Пробить</button>
+        </div>
+        <div id="phone-result" style="margin-top: 15px;"></div>
+    </div>
+</section>
+            <!-- DNS Lookup -->
+            <section>
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fa-solid fa-network-wired" style="margin-right:8px; color:var(--accent-color);"></i> DNS Лукап</h2>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="section-body">
+                    <p style="margin-bottom: 10px; color: #888;">A / AAAA / MX / TXT / NS / CNAME через Google Public DNS</p>
+                    <div class="input-group">
+                        <input type="text" id="dns-input" placeholder="example.com">
+                        <select id="dns-type" style="background:#111; color:#fff; border:1px solid #333; border-radius:5px; padding:10px;">
+                            <option value="A">A</option>
+                            <option value="AAAA">AAAA</option>
+                            <option value="MX">MX</option>
+                            <option value="TXT">TXT</option>
+                            <option value="NS">NS</option>
+                            <option value="CNAME">CNAME</option>
+                        </select>
+                        <button id="dns-btn">Запрос</button>
+                    </div>
+                    <div id="dns-result" style="margin-top:15px; font-family:monospace; font-size:0.9rem; white-space:pre-wrap; word-break:break-all;"></div>
+                </div>
+            </section>
+
+            <!-- Shodan InternetDB -->
+            <section>
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fa-solid fa-server" style="margin-right:8px; color:var(--accent-color);"></i> Shodan InternetDB</h2>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="section-body">
+                    <p style="margin-bottom: 10px; color: #888;">Открытые порты, CVE, хостнеймы по IP. Без ключа.</p>
+                    <div class="input-group">
+                        <input type="text" id="shodan-input" placeholder="8.8.8.8">
+                        <button id="shodan-btn">Проверить</button>
+                    </div>
+                    <div id="shodan-result" style="margin-top:15px; font-family:monospace; font-size:0.9rem; white-space:pre-wrap;"></div>
+                </div>
+            </section>
+
+            <!-- IP Geo / ISP -->
+            <section>
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fa-solid fa-location-dot" style="margin-right:8px; color:var(--accent-color);"></i> IP Инфо (Geo / ISP)</h2>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="section-body">
+                    <p style="margin-bottom: 10px; color: #888;">Страна, город, провайдер, ASN. Через HackMyIP.</p>
+                    <div class="input-group">
+                        <input type="text" id="ipinfo-input" placeholder="8.8.8.8">
+                        <button id="ipinfo-btn">Узнать</button>
+                    </div>
+                    <div id="ipinfo-result" style="margin-top:15px; font-family:monospace; font-size:0.9rem; white-space:pre-wrap;"></div>
+                </div>
+            </section>
+        
+        <!-- Генератор Google Dorks -->
+        <section>
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2><i class="fa-solid fa-magnifying-glass-chart" style="margin-right:8px; color:var(--accent-color);"></i> Генератор Google Dorks</h2>
+                <span class="toggle-arrow">▼</span>
+            </div>
+            <div class="section-body">
+                <p style="margin-bottom: 10px; color: #888;">Введи домен (например, site.com), чтобы сгенерировать поисковые запросы для глубокого анализа.</p>
+                <div class="input-group">
+                    <input type="text" id="dork-input" placeholder="example.com">
+                    <button id="dork-btn">Сгенерировать</button>
+                </div>
+                <div id="dork-result" style="margin-top: 15px; display: flex; flex-direction: column; gap: 10px;"></div>
+            </div>
+        </section>
+        
+        <!-- EXIF Просмотрщик -->
+<section>
+    <div class="section-header" onclick="toggleSection(this)">
+        <h2><i class="fa-solid fa-image" style="margin-right:8px; color:var(--accent-color);"></i> Анализ фото (EXIF)</h2>
+        <span class="toggle-arrow">▼</span>
+    </div>
+    <div class="section-body">
+        <p style="margin-bottom: 10px; color: #888;">Загрузи фото, чтобы узнать, где и на что оно было сделано (GPS, камера, дата).</p>
+        <div class="input-group">
+            <input type="file" id="exif-input" accept="image/*">
+        </div>
+        <div id="exif-result" style="margin-top: 15px; font-family: monospace; font-size: 0.9rem; white-space: pre-wrap;"></div>
+    </div>
+</section>
+</div>
+        
+
+        <!-- ИНСТРУМЕНТЫ -->
+        <div id="tab-tools" class="tab-page">
+            <section>
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fa-solid fa-microchip" style="margin-right:8px; color:var(--accent-color);"></i> Мониторинг ПК</h2>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="section-body">
+                    <div class="dashboard" style="flex-direction: column; align-items: stretch;">
+                        <div class="monitor-item">
+                            <div class="monitor-label"><span>Загрузка ЦП</span> <span id="cpu-value">0%</span></div>
+                            <div class="progress-bar"><div class="progress-fill" id="cpu-bar" style="width: 0%;"></div></div>
+                        </div>
+                        <div class="monitor-item">
+                            <div class="monitor-label"><span>Загрузка ОЗУ</span> <span id="ram-value">0%</span></div>
+                            <div class="progress-bar"><div class="progress-fill" id="ram-bar" style="width: 0%;"></div></div>
+                        </div>
+                        <div class="monitor-item">
+                            <div class="monitor-label"><span>Температура GPU</span> <span id="gpu-value">0°C</span></div>
+                            <div class="progress-bar"><div class="progress-fill" id="gpu-bar" style="width: 0%;"></div></div>
+                        </div>
+                    </div>
+                    <p style="color:#888; font-size:0.85rem; margin-top:10px;">Демо-мониторинг — данные симулированы</p>
+                </div>
+            </section>
+            <section>
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fa-solid fa-cloud-sun" style="margin-right:8px; color:var(--accent-color);"></i> Погода</h2>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="section-body">
+                    <div class="input-group">
+                        <input type="text" id="city-input" placeholder="Введи город">
+                        <button id="weather-btn">Узнать</button>
+                    </div>
+                    <div id="weather-result"></div>
+                </div>
+            </section>
+            <section>
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fa-solid fa-key" style="margin-right:8px; color:var(--accent-color);"></i> Анализатор пароля</h2>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="section-body">
+                    <input type="text" id="password-input" placeholder="Введи пароль">
+                    <div id="password-result"></div>
+                </div>
+            </section>
+            <section>
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fa-solid fa-globe" style="margin-right:8px; color:var(--accent-color);"></i> IP / Domain Инструмент</h2>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="section-body">
+                    <div class="input-group">
+                        <input type="text" id="target-input" placeholder="IP или домен">
+                        <button id="target-btn">Проверить</button>
+                    </div>
+                </div>
+            </section>
+            <section>
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fa-solid fa-pen-to-square" style="margin-right:8px; color:var(--accent-color);"></i> Блокнот</h2>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="section-body">
+                    <textarea id="notepad" placeholder="Пиши здесь..."></textarea>
+                </div>
+            </section>
+            <section>
+                <div class="section-header" onclick="toggleSection(this)">
+                    <h2><i class="fa-solid fa-terminal" style="margin-right:8px; color:var(--accent-color);"></i> Мини-терминал</h2>
+                    <span class="toggle-arrow">▼</span>
+                </div>
+                <div class="section-body">
+                    <div class="terminal-window">
+                        <div class="terminal-header">
+                            <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                            <span class="terminal-title">user@fadr: ~</span>
+                        </div>
+                        <div class="terminal-body" id="terminal-output">
+                            <p>Добро пожаловать. Введи 'help'.</p>
+                        </div>
+                        <div class="terminal-input-line">
+                            <span>$</span>
+                            <input type="text" id="terminal-input" placeholder="Введи команду...">
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- ОБО МНЕ -->
+        <div id="tab-about-page" class="tab-page">
+            <div class="nav-menu">
+                <button class="nav-btn active" data-target="side-tab-about">Обо мне</button>
+                <button class="nav-btn" data-target="side-tab-projects">Проекты</button>
+                <button class="nav-btn" data-target="side-tab-contact">Контакты</button>
+            </div>
+            <section id="side-tab-about" class="tab-content active">
+                <h2>Обо мне</h2>
+                <p>Привет! Я Fadr. Увлекаюсь OSINT, железом и веб-разработкой.</p>
+            </section>
+            <section id="side-tab-projects" class="tab-content">
+                <h2>Мои проекты</h2>
+                <div class="project-item">
+                    <h3>OSINT-кейс №1 (Закрыт)</h3>
+                    <p>Мне в руки попался очень интересный человек, который оказался пиздец какой сложный по поиску. Начал я с поиска в ТГ, но там ничего не нашел. Пошел в ВК и нашел его страницу.</p>
+                    <p>Назавем его "Олег". По началу все было супер: узнал ФИО и дату рождения. Но когда начал копать глубже, оказалось, что у него есть еще одна фамилия, о которой я не знал. Это усложнило круг поиска. Потом появилась еще одна фамилия. Я встрял, было непонятно, кто он на самом деле.</p>
+                    <p>Но к счастью, я справился. Нарыл: дату рождения, номер телефона, адрес, маму с папой, бабушку и дедушку. Закрыл кейс на 8 из 10. А сложность была 10 из 10.</p>
+                </div>
+                <div class="project-item">
+                    <h3>OSINT-кейс №2 (Скоро)</h3>
+                    <p>В процессе разработки...</p>
+                </div>
+                <div class="project-item">
+                    <h3>Настройка сервера (В процессе)</h3>
+                    <p>Сборка и настройка домашнего сервера на базе Xeon для тестов и OSINT-виртуалок.</p>
+                </div>  
+                <div class="project-item">
+                    <h3>Сайт-портфолио (Готово)</h3>
+                    <p>Написал этот сайт с нуля на HTML/CSS/JS.</p>
+                </div>
+            </section>
+            <section id="side-tab-contact" class="tab-content">
+                <h2>Контакты</h2>
+                <div class="contact-links">
+                    <a href="https://t.me/fadrteam" target="_blank"><i class="fa-brands fa-telegram"></i> Telegram</a>
+                    <a href="https://github.com/fadrteam" target="_blank"><i class="fa-brands fa-github"></i> GitHub</a>
+                    <a href="mailto:твоя_почта@mail.ru"><i class="fa-solid fa-envelope"></i> Email</a>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p>Сделано в 2026 году.</p>
+            <p>С любовью FADRTEAM.</p>
+        </footer>
+
+        <button id="scroll-top-btn" title="Наверх">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 19V5M5 12l7-7 7 7"/>
+            </svg>
+        </button>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/exif-js"></script>
+    <script src="script.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true, offset: 100 });
+    </script>
+    
+    <!-- Пасхалка -->
+    <div id="hack-overlay">
+        <div class="hack-window">
+            <div class="hack-header">
+                <span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span>
+                <span class="hack-title">root@fadr:~#</span>
+            </div>
+            <div class="hack-body" id="hack-log"></div>
+        </div>
+    </div>
+</body>
+</html>
